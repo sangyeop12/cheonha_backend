@@ -2,6 +2,17 @@ from deep_translator import GoogleTranslator
 
 
 def translate_overview(text: str, language: str):
+
+    proper_nouns = {
+        "석빙고": "Seokbinggo",
+        "첨성대": "Cheomseongdae",
+        "불국사": "Bulguksa",
+        "경복궁": "Gyeongbokgung"
+    }
+
+    for kor, eng in proper_nouns.items():
+        text = text.replace(kor, eng)
+
     lang = language.upper()
 
     target_map = {
@@ -13,20 +24,12 @@ def translate_overview(text: str, language: str):
 
     target_lang = target_map.get(lang, "en")
 
-    try:
-        translated = GoogleTranslator(
-            source="ko",
-            target=target_lang
-        ).translate(text)
+    translated = GoogleTranslator(
+        source="ko",
+        target=target_lang
+    ).translate(text)
 
-        return {
-            "language": language,
-            "translatedText": translated
-        }
-
-    except Exception as e:
-        return {
-            "language": language,
-            "error": str(e),
-            "message": "번역 중 오류가 발생했습니다."
-        }
+    return {
+        "language": language,
+        "translatedText": translated
+    }
