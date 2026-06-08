@@ -1,31 +1,32 @@
-import os
-import google.generativeai as genai
-from dotenv import load_dotenv
-
-load_dotenv()
-
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-
-if not GEMINI_API_KEY:
-    raise ValueError("GEMINI_API_KEY가 .env 파일에 없습니다.")
-
-genai.configure(api_key=GEMINI_API_KEY)
-
-model = genai.GenerativeModel("gemini-2.0-flash")
+from deep_translator import GoogleTranslator
 
 
 def translate_overview(text: str, language: str):
+    lang = language.upper()
 
-    fake_translations = {
-        "English": "Seokbinggo was a storage building used to keep ice during the Joseon Dynasty.",
-        "Japanese": "石氷庫は氷を保存するための倉庫でした。",
-        "Chinese": "石冰库是古代储存冰块的仓库。"
+    target_map = {
+        "ENGLISH": "en",
+        "JAPANESE": "ja",
+        "CHINESE": "zh-CN",
+        "KOREAN": "ko"
     }
 
-    return {
-        "language": language,
-        "translatedText": fake_translations.get(
-            language,
-            f"{language} translation example"
-        )
-    }
+    target_lang = target_map.get(lang, "en")
+
+    try:
+        translated = GoogleTranslator(
+            source="ko",
+            target=target_lang
+        ).translate(text)
+
+        return {
+            "language": language,
+            "translatedText": translated
+        }
+
+    except Exception as e:
+        return {
+            "language": language,
+            "error": str(e),
+            "message": "번역 중 오류가 발생했습니다."
+        }
