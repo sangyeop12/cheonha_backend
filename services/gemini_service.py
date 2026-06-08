@@ -15,7 +15,17 @@ model = genai.GenerativeModel("gemini-2.0-flash")
 
 
 def translate_overview(text: str, language: str):
+
+    fake_translations = {
+        "English": "Seokbinggo was a storage building used to keep ice during the Joseon Dynasty.",
+        "Japanese": "石氷庫は氷を保存するための倉庫でした。",
+        "Chinese": "石冰库是古代储存冰块的仓库。"
+    }
+
     return {
         "language": language,
-        "translatedText": f"[{language} 번역 예시] {text}"
+        "translatedText": fake_translations.get(
+            language,
+            f"{language} translation example"
+        )
     }
